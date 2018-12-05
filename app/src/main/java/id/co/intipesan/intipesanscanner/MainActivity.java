@@ -16,7 +16,10 @@ import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
 import com.google.zxing.Result;
 
-public class MainActivity extends AppCompatActivity {
+import id.co.intipesan.intipesanscanner.service.API;
+import id.co.intipesan.intipesanscanner.service.IntipesanAPI;
+
+public class MainActivity extends AppCompatActivity implements ResultActivity {
     private final AppCompatActivity activity = this;
     private CodeScannerView scannerView;
     private CodeScanner scanner;
@@ -73,12 +76,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void verifySuccess() {
+        Toast.makeText(getApplicationContext(), getResources().getString(R.string.verify_success), Toast.LENGTH_SHORT).show();
+    }
+
+    private void errorInternalServer() {
+        Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_unknown), Toast.LENGTH_SHORT).show();
+    }
+
+    private void errorConnection() {
+        Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_connection), Toast.LENGTH_SHORT).show();
+    }
+
     private void errorPermissionDenied() {
         Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_permission_denied), Toast.LENGTH_SHORT).show();
     }
 
     private void activate(String data) {
-        Toast.makeText(getApplicationContext(), data, Toast.LENGTH_SHORT).show();
+        IntipesanAPI.verify(this, data);
+        Toast.makeText(getApplicationContext(), getResources().getString(R.string.sent_request), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -91,5 +107,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         scanner.releaseResources();
         super.onPause();
+    }
+
+    @Override
+    public void onActivityResult(int responseCode, int resultCode) {
+        switch (responseCode) {
+            case API.REGISTRATION_CODE_VERIFY:
+                if (resultCode == API.IS_SUCCESS) {
+                    verifySuccess();
+                } else if (resultCode == API.ERROR_INTERNAL_SERVER) {
+                    errorInternalServer();
+                } else {
+                    errorConnection();
+                }
+        }
     }
 }

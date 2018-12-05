@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">IntiPesan Scanner</string>
 
+    <string name="sent_request">Sending request&#8230;</string>
+
+    <string name="verify_success">QR Code Verified!</string>
     <string name="error_permission_denied">Please enable camera permission!</string>
+    <string name="error_unknown">Verify failed! Please try again!</string>
+    <string name="error_connection">Internet connection problem! Please try again!</string>
 </resources>
