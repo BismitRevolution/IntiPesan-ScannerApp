@@ -3,8 +3,15 @@
 
     <string name="sent_request">Sending request&#8230;</string>
 
-    <string name="verify_success">QR Code Verified!</string>
+    <string name="detail_code">Kode Registrasi : </string>
+    <string name="detail_name">Nama : </string>
+    <string name="detail_position">Jabatan : </string>
+    <string name="detail_company">Perusahaan : </string>
+    <string name="btn_close">TUTUP</string>
+
+    <string name="verify_success">VERIFIKASI SUKSES!</string>
+    <string name="verify_already">KODE SUDAH TERVERIFIKASI!</string>
     <string name="error_permission_denied">Please enable camera permission!</string>
-    <string name="error_unknown">Verify failed! Please try again!</string>
-    <string name="error_connection">Internet connection problem! Please try again!</string>
+    <string name="error_unknown">VERIFIKASI GAGAL! SILAHKAN COBA LAGI!</string>
+    <string name="error_connection">KONEKSI INTERNET GAGAL! SILAHKAN COBA LAGI!</string>
 </resources>

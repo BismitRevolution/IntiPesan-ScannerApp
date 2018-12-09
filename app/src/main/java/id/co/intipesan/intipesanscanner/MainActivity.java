@@ -1,6 +1,7 @@
 package id.co.intipesan.intipesanscanner;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,10 +17,11 @@ import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
 import com.google.zxing.Result;
 
+import id.co.intipesan.intipesanscanner.data.RegistrantData;
 import id.co.intipesan.intipesanscanner.service.API;
 import id.co.intipesan.intipesanscanner.service.IntipesanAPI;
 
-public class MainActivity extends AppCompatActivity implements ResultActivity {
+public class MainActivity extends AppCompatActivity implements ResponseActivity<RegistrantData> {
     private final AppCompatActivity activity = this;
     private CodeScannerView scannerView;
     private CodeScanner scanner;
@@ -76,20 +78,38 @@ public class MainActivity extends AppCompatActivity implements ResultActivity {
         }
     }
 
-    private void verifySuccess() {
-        Toast.makeText(getApplicationContext(), getResources().getString(R.string.verify_success), Toast.LENGTH_SHORT).show();
+    private void verifySuccess(RegistrantData data) {
+        Intent intent = new Intent(this, PostActivity.class);
+        intent.putExtra(PostActivity.EXTRA_VERIFIED, API.IS_SUCCESS);
+        intent.putExtra(PostActivity.EXTRA_REGISTRATION_CODE, data.getRegistrationCode());
+        intent.putExtra(PostActivity.EXTRA_NAME, data.getName());
+        intent.putExtra(PostActivity.EXTRA_POSITION, data.getPosition());
+        intent.putExtra(PostActivity.EXTRA_COMPANY, data.getCompany());
+        startActivity(intent);
+//        Toast.makeText(getApplicationContext(), getResources().getString(R.string.verify_success), Toast.LENGTH_LONG).show();
+    }
+
+    private void alreadyVerified(RegistrantData data) {
+        Intent intent = new Intent(this, PostActivity.class);
+        intent.putExtra(PostActivity.EXTRA_VERIFIED, API.ALREADY_VERIFIED);
+        intent.putExtra(PostActivity.EXTRA_REGISTRATION_CODE, data.getRegistrationCode());
+        intent.putExtra(PostActivity.EXTRA_NAME, data.getName());
+        intent.putExtra(PostActivity.EXTRA_POSITION, data.getPosition());
+        intent.putExtra(PostActivity.EXTRA_COMPANY, data.getCompany());
+        startActivity(intent);
+//        Toast.makeText(getApplicationContext(), getResources().getString(R.string.verify_already), Toast.LENGTH_LONG).show();
     }
 
     private void errorInternalServer() {
-        Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_unknown), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_unknown), Toast.LENGTH_LONG).show();
     }
 
     private void errorConnection() {
-        Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_connection), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_connection), Toast.LENGTH_LONG).show();
     }
 
     private void errorPermissionDenied() {
-        Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_permission_denied), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_permission_denied), Toast.LENGTH_LONG).show();
     }
 
     private void activate(String data) {
@@ -110,11 +130,13 @@ public class MainActivity extends AppCompatActivity implements ResultActivity {
     }
 
     @Override
-    public void onActivityResult(int responseCode, int resultCode) {
+    public void onActivityResponse(int responseCode, int resultCode, RegistrantData data) {
         switch (responseCode) {
             case API.REGISTRATION_CODE_VERIFY:
                 if (resultCode == API.IS_SUCCESS) {
-                    verifySuccess();
+                    verifySuccess(data);
+                } else if (resultCode == API.ALREADY_VERIFIED) {
+                    alreadyVerified(data);
                 } else if (resultCode == API.ERROR_INTERNAL_SERVER) {
                     errorInternalServer();
                 } else {
