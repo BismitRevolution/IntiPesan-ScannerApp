@@ -19,7 +19,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".TestActivity"/>
+        <activity android:name=".TestActivity">
+        </activity>
+
         <activity android:name=".PostActivity"/>
     </application>
 </manifest>

@@ -1,10 +1,18 @@
 package id.co.intipesan.intipesanscanner;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.print.PrintAttributes;
+import android.print.PrintDocumentAdapter;
+import android.print.PrintJob;
+import android.print.PrintManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import id.co.intipesan.intipesanscanner.data.RegistrantData;
@@ -12,6 +20,7 @@ import id.co.intipesan.intipesanscanner.service.API;
 import id.co.intipesan.intipesanscanner.service.IntipesanAPI;
 
 public class TestActivity extends AppCompatActivity implements ResponseActivity<RegistrantData> {
+    private WebView webView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -26,7 +35,36 @@ public class TestActivity extends AppCompatActivity implements ResponseActivity<
     }
 
     private void test() {
-        IntipesanAPI.verify(this, "TES0001");
+//        IntipesanAPI.verify(this, "TES0001");
+        doPrint();
+    }
+
+    private void doPrint() {
+        WebView view = new WebView(this);
+        view.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+//                return super.shouldOverrideUrlLoading(view, request);
+                return false;
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                createPrintJob(view);
+                webView = null;
+            }
+        });
+        view.loadUrl("http://intipesan.cymonevo.com/print/" + "Aji Imawan Omi" + "/peserta");
+        webView = view;
+    }
+
+    private void createPrintJob(WebView view) {
+        PrintManager manager = (PrintManager) getSystemService(Context.PRINT_SERVICE);
+
+        String jobName = "PRINT AJI IMAWAN OMI";
+        PrintDocumentAdapter adapter = view.createPrintDocumentAdapter(jobName);
+        manager.print(jobName, adapter, new PrintAttributes.Builder().setMediaSize(PrintAttributes.MediaSize.ISO_A6).build());
     }
 
     private void verifySuccess(int code) {

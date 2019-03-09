@@ -7,6 +7,7 @@
     <string name="detail_name">Nama : </string>
     <string name="detail_position">Jabatan : </string>
     <string name="detail_company">Perusahaan : </string>
+    <string name="btn_print">PRINT</string>
     <string name="btn_close">TUTUP</string>
 
     <string name="verify_success">VERIFIKASI SUKSES!</string>
