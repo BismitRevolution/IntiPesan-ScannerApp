@@ -14,7 +14,8 @@ public class IntipesanAPI {
 
 //    public final static String DEV_URL = "http://127.0.0.1:8000";
 //    public final static String BASE_URL = "http://intipesan.cymonevo.com";
-    public final static String PROD_URL = "http://ujicoba.intipesan.co.id";
+//    public final static String STAGING_URL = "http://ujicoba.intipesan.co.id";
+    public final static String PROD_URL = "http://admin.intipesan.co.id";
 
     public static IntipesanService service = new Retrofit.Builder()
             .baseUrl(PROD_URL)
